@@ -133,6 +133,8 @@ var Grid = function (_React$PureComponent) {
         prevIsScrolling: props.isScrolling === true,
         prevScrollToColumn: props.scrollToColumn,
         prevScrollToRow: props.scrollToRow,
+        prevScrollLeft: props.scrollLeft,
+        prevScrollTop: props.scrollTop,
 
         scrollbarSize: 0,
         scrollbarSizeMeasured: false
@@ -140,8 +142,8 @@ var Grid = function (_React$PureComponent) {
       isScrolling: false,
       scrollDirectionHorizontal: SCROLL_DIRECTION_FORWARD,
       scrollDirectionVertical: SCROLL_DIRECTION_FORWARD,
-      scrollLeft: 0,
-      scrollTop: 0,
+      scrollLeft: props.scrollLeft || 0,
+      scrollTop: props.scrollTop || 0,
       scrollPositionChangeReason: null,
 
       needToResetStyleCache: false
@@ -1043,6 +1045,8 @@ var Grid = function (_React$PureComponent) {
     key: 'getDerivedStateFromProps',
     value: function getDerivedStateFromProps(nextProps, prevState) {
       var newState = {};
+      var instanceProps = prevState.instanceProps;
+
 
       if (nextProps.columnCount === 0 && prevState.scrollLeft !== 0 || nextProps.rowCount === 0 && prevState.scrollTop !== 0) {
         newState.scrollLeft = 0;
@@ -1050,7 +1054,7 @@ var Grid = function (_React$PureComponent) {
 
         // only use scroll{Left,Top} from props if scrollTo{Column,Row} isn't specified
         // scrollTo{Column,Row} should override scroll{Left,Top}
-      } else if (nextProps.scrollLeft !== prevState.scrollLeft && nextProps.scrollToColumn < 0 || nextProps.scrollTop !== prevState.scrollTop && nextProps.scrollToRow < 0) {
+      } else if (nextProps.scrollLeft !== instanceProps.prevScrollLeft && nextProps.scrollToColumn < 0 || nextProps.scrollTop !== instanceProps.prevScrollTop && nextProps.scrollToRow < 0) {
         _Object$assign(newState, Grid._getScrollToPositionStateUpdate({
           prevState: prevState,
           scrollLeft: nextProps.scrollLeft,
@@ -1058,10 +1062,7 @@ var Grid = function (_React$PureComponent) {
         }));
       }
 
-      var instanceProps = prevState.instanceProps;
-
       // Initially we should not clearStyleCache
-
       newState.needToResetStyleCache = false;
       if (nextProps.columnWidth !== instanceProps.prevColumnWidth || nextProps.rowHeight !== instanceProps.prevRowHeight) {
         // Reset cache. set it to {} in render
@@ -1133,6 +1134,8 @@ var Grid = function (_React$PureComponent) {
       instanceProps.prevRowHeight = nextProps.rowHeight;
       instanceProps.prevScrollToColumn = nextProps.scrollToColumn;
       instanceProps.prevScrollToRow = nextProps.scrollToRow;
+      instanceProps.prevScrollLeft = nextProps.scrollLeft;
+      instanceProps.prevScrollTop = nextProps.scrollTop;
 
       // getting scrollBarSize (moved from componentWillMount)
       instanceProps.scrollbarSize = nextProps.getScrollbarSize();

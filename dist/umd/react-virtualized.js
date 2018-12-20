@@ -2015,14 +2015,16 @@
                     prevIsScrolling: !0 === props.isScrolling,
                     prevScrollToColumn: props.scrollToColumn,
                     prevScrollToRow: props.scrollToRow,
+                    prevScrollLeft: props.scrollLeft,
+                    prevScrollTop: props.scrollTop,
                     scrollbarSize: 0,
                     scrollbarSizeMeasured: !1
                 },
                 isScrolling: !1,
                 scrollDirectionHorizontal: SCROLL_DIRECTION_FORWARD,
                 scrollDirectionVertical: SCROLL_DIRECTION_FORWARD,
-                scrollLeft: 0,
-                scrollTop: 0,
+                scrollLeft: props.scrollLeft || 0,
+                scrollTop: props.scrollTop || 0,
                 scrollPositionChangeReason: null,
                 needToResetStyleCache: !1
             }, props.scrollToRow > 0 && (_this._initialScrollTop = _this._getCalculatedScrollTop(props, _this.state)), 
@@ -2416,15 +2418,13 @@
         } ], [ {
             key: "getDerivedStateFromProps",
             value: function(nextProps, prevState) {
-                var newState = {};
+                var newState = {}, instanceProps = prevState.instanceProps;
                 0 === nextProps.columnCount && 0 !== prevState.scrollLeft || 0 === nextProps.rowCount && 0 !== prevState.scrollTop ? (newState.scrollLeft = 0, 
-                newState.scrollTop = 0) : (nextProps.scrollLeft !== prevState.scrollLeft && nextProps.scrollToColumn < 0 || nextProps.scrollTop !== prevState.scrollTop && nextProps.scrollToRow < 0) && Object.assign(newState, Grid._getScrollToPositionStateUpdate({
+                newState.scrollTop = 0) : (nextProps.scrollLeft !== instanceProps.prevScrollLeft && nextProps.scrollToColumn < 0 || nextProps.scrollTop !== instanceProps.prevScrollTop && nextProps.scrollToRow < 0) && Object.assign(newState, Grid._getScrollToPositionStateUpdate({
                     prevState: prevState,
                     scrollLeft: nextProps.scrollLeft,
                     scrollTop: nextProps.scrollTop
-                }));
-                var instanceProps = prevState.instanceProps;
-                newState.needToResetStyleCache = !1, nextProps.columnWidth === instanceProps.prevColumnWidth && nextProps.rowHeight === instanceProps.prevRowHeight || (newState.needToResetStyleCache = !0), 
+                })), newState.needToResetStyleCache = !1, nextProps.columnWidth === instanceProps.prevColumnWidth && nextProps.rowHeight === instanceProps.prevRowHeight || (newState.needToResetStyleCache = !0), 
                 instanceProps.columnSizeAndPositionManager.configure({
                     cellCount: nextProps.columnCount,
                     estimatedCellSize: Grid._getEstimatedColumnSize(nextProps),
@@ -2469,7 +2469,8 @@
                 }), instanceProps.prevColumnCount = nextProps.columnCount, instanceProps.prevColumnWidth = nextProps.columnWidth, 
                 instanceProps.prevIsScrolling = !0 === nextProps.isScrolling, instanceProps.prevRowCount = nextProps.rowCount, 
                 instanceProps.prevRowHeight = nextProps.rowHeight, instanceProps.prevScrollToColumn = nextProps.scrollToColumn, 
-                instanceProps.prevScrollToRow = nextProps.scrollToRow, instanceProps.scrollbarSize = nextProps.getScrollbarSize(), 
+                instanceProps.prevScrollToRow = nextProps.scrollToRow, instanceProps.prevScrollLeft = nextProps.scrollLeft, 
+                instanceProps.prevScrollTop = nextProps.scrollTop, instanceProps.scrollbarSize = nextProps.getScrollbarSize(), 
                 void 0 === instanceProps.scrollbarSize ? (instanceProps.scrollbarSizeMeasured = !1, 
                 instanceProps.scrollbarSize = 0) : instanceProps.scrollbarSizeMeasured = !0, newState.instanceProps = instanceProps, 
                 _extends({}, newState, maybeStateA, maybeStateB);
